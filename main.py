@@ -29,7 +29,7 @@ def compress_video(video_full_path, output_file_name, target_size):
     duration = float(probe['format']['duration'])
     # Audio bitrate, in bps.
     has_audio = False
-    audio_bitrate = 0
+    audio_bitrate = 200
     for s in probe['streams']:
         if s['codec_type'] == 'audio':
             audio_bitrate = s['bit_rate']
