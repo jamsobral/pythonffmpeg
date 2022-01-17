@@ -29,18 +29,23 @@ def compress_video(video_full_path, output_file_name, target_size):
     duration = float(probe['format']['duration'])
     # Audio bitrate, in bps.
     has_audio = False
+    has_video = False
     audio_bitrate = 200
     for s in probe['streams']:
-        if s['codec_type'] == 'audio':
-            audio_bitrate = s['bit_rate']
-            has_audio = True
+        if s['codec_type'] == 'audio' and has_audio == False:
+            try:
+                audio_bitrate = s['bit_rate']
+                has_audio = True
+            except:
+                pass
+        if s['codec_type'] == 'video' and has_video == False:
+            try:
+                vid_bitrate = int(s['bit_rate'])
+                video_bitrate = vid_bitrate * target_size / 100
+                has_video = True
+            except:
+                pass
     #audio_bitrate = float(next((s for s in probe['streams'] if s['codec_type'] == 'audio'), None)['bit_rate'])
-
-    # Target total bitrate, in bps.
-    for s in probe['streams']:
-        if s['codec_type'] == 'video':
-            vid_bitrate = int(s['bit_rate'])
-            video_bitrate = vid_bitrate * target_size / 100
 
     i = ffmpeg.input(video_full_path)
 
